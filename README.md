@@ -1,45 +1,25 @@
-# Heimdallr Terminal Emulator
+# LazyCat Terminal Emulator (Debian application)
 
-A terminal,
-We are focused on its lightness and speed!
-Finally, it can be a permanent terminal for you!
-this terminal witten in C and Gtk framework
-because HEIMDALLR must be a SUPER lightweight.
+This lightweight and fast terminal, written in C and Gtk framework, is designed to be your permanent choice.
 
+SIZE: 19KB :D
 
-SIZE : 23KB :D
-
-
-after compile !!!!!!!!!!!!!!!!!!!!!
-
+after compile!
 
 # screenshots
 
 ![screenshots](screenshots/1.png)
-
 ![screenshots](screenshots/2.png)
 
-![screenshots](screenshots/3.png)
+
+# Remember the following text for system-wide installation on Debian:
+```
+$ cd debian
+$ make install
+```
 
 
-# installation (Debian)
-    $ cd debian
-    $ ./preinstallRequirementsDebian.sh
-    $ ./install-heimdallr-debian.py
-
-
-# installation (Fedora)
-    $ cd fedora
-    $ ./preinstallRequirementsFedora.sh
-    $ ./install-heimdallr-fedora.py
-
-
-# update
-    $ heimdallr-update
-
-# exec (local)
-    $ cd debian OR cd fedora
-    $ ./preinstallRequirementsFedora.sh OR ./preinstallRequirementsDebian.sh
-    $ make
-    $ ./heimdallr
-
+# Please remember the following steps for local execution:
+1. Navigate to the "Debian" directory by entering the command: $ cd debian
+2. Build the executable by running the command: $ make
+3. Execute the program by typing: $ ./lazyCat
