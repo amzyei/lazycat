@@ -1,4 +1,4 @@
-﻿# LazyCat Terminal Emulator ( ####Ubuntu application)
+﻿# LazyCat Terminal Emulator (#### Ubuntu application)
 
 This lightweight and fast terminal, written in C and Gtk framework, is designed to be your permanent choice.
 
