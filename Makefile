@@ -15,12 +15,12 @@ all: lazyCat
 lazyCat: main.c
 		${CC} main.c ${TERMFLAGS} -o lazyCat
 		strip lazyCat
+deps:
+	sudo apt update && sudo apt full-upgrade -y && sudo apt install gcc build-essential libgtk-3-dev libnotify-bin zenity libvte-2.91-dev
 
 
 install: lazyCat 
 	mkdir -p ~/.lazyCat/ ; cp -rf .. ~/.lazyCat/
-	sudo apt update && sudo apt full-upgrade -y
-	sudo apt install gcc build-essential libgtk-3-dev libnotify-bin zenity libvte-2.91-dev
 	sudo cp lazyCat /usr/bin/
 	sudo cp -rf ../xdg/lazyCat.desktop /usr/share/applications
 	cp -rf ../xdg/lazyCat.desktop ~/.local/share/applications
