@@ -19,5 +19,11 @@ $ make install
 
 
 # Please remember the following steps for local execution:
-1. Build the executable by running the command:``` $ make lazyCat ```
-2. Execute the program by typing: ```$ ./lazyCat```
+1. Build the executable by running the command:
+2. ```
+   $ make lazyCat
+4. ```
+5. Execute the program by typing:
+6. ```
+   $ ./lazyCat
+7. ```
