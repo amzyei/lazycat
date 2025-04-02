@@ -1,86 +1,96 @@
-
+#!/usr/bin/env python3
 import gi
+import subprocess
+import os
+import threading
+import notify2
+
 gi.require_version('Gtk', '3.0')
-gi.require_version('Vte', '2.91')
-from gi.repository import Gtk, Vte, Pango, GLib
+gi.require_version('Vte', '2.91')  # Ensure you have the correct version
+from gi.repository import Gtk, Vte, GLib, Gio
 
-# Create a new terminal widget
-terminal = Vte.Terminal()
+NOTIFY_SEND = 'notify-send '
+ICON_PATH = './icon/lazycat.png'
 
-# Set the font size to 14
-font_desc = Pango.FontDescription('monospace 14')
-terminal.set_font(font_desc)
+class PackageManager:
+    def __init__(self):
+        
+        self.icon_path = './icon/lazycat.png'
+        if not os.path.exists(self.icon_path):
+            print('Error: Icon path not found')
+            exit(1)
 
-# Create a text box
-text_box = Gtk.Entry()
+        notify2.init('lazyCat')
 
-# Create a button
-button = Gtk.Button(label="Run Command")
+        self.window = Gtk.Window(title='lazyCat')
+        self.window.set_icon_from_file(self.icon_path)
+        self.window.connect('destroy', Gtk.main_quit)
 
-# Create a vertical box to hold the terminal, text box, and button
-vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-vbox.pack_start(terminal, True, True, 0)
-vbox.pack_start(text_box, False, False, 0)
-vbox.pack_start(button, False, False, 0)
+        self.terminal = Vte.Terminal()
+        self.terminal.set_font_scale(1.3)
 
-# Create a GTK window
-win = Gtk.Window()
-win.connect('destroy', Gtk.main_quit)
-win.add(vbox)
-win.show_all()
+        self.first_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.second_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        self.third_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
 
-# Function to handle the button click
-def on_button_clicked(button):
-    command = text_box.get_text()
-    if command:
-        # Feed the command to the terminal
-        terminal.feed_child(command + '\n')  # Add a newline to execute the command
+        self.install_button = Gtk.Button(label='Install Package')
+        self.install_button.connect('clicked', self.install_package)
 
-# Connect the button to the click handler
-button.connect('clicked', on_button_clicked)
+        self.exec_label = Gtk.Label(label='Enter package name: ')
+        self.exec_entry = Gtk.Entry()
 
-# Function to handle the terminal's child-exit signal
-def on_child_exited(terminal, pid):
-    print(f"Child process with PID {pid} has exited")
-    # Optionally, you can close the window or restart the shell
-    terminal.spawn_async(
-        Vte.PtyFlags.DEFAULT,
-        None,  # Working directory (None means use the home directory)
-        ["/bin/bash"],  # Command to run
-        [],  # Environment variables
-        GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-        None,  # Child setup function
-        None,  # User data for child setup function
-        -1,  # Timeout
-        None,  # Cancellable
-        on_spawn_complete  # Callback function for spawn completion
-    )
+        self.first_box.pack_start(self.terminal, True, True, 0)
+        self.first_box.pack_end(self.second_box, False, False, 0)
+        self.first_box.pack_end(self.third_box, False, False, 0)
 
-# Function to handle the spawn completion
-def on_spawn_complete(terminal, success, pid, error):
-    if not success:
-        print(f"Failed to spawn shell: {error}")
-        return
-    print(f"Shell spawned with PID {pid}")
+        self.second_box.pack_end(self.install_button, True, True, 4)
+        self.third_box.pack_start(self.exec_label, False, False, 4)
+        self.third_box.pack_start(self.exec_entry, False, False, 4)
 
-# Start a shell in the terminal
-result = terminal.spawn_async(
-    Vte.PtyFlags.DEFAULT,
-    None,  # Working directory (None means use the home directory)
-    ["/bin/bash"],  # Command to run
-    [],  # Environment variables
-    GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-    None,  # Child setup function
-    None,  # User data for child setup function
-    -1,  # Timeout
-    None,  # Cancellable
-    on_spawn_complete  # Callback function for spawn completion
-)
+        self.window.add(self.first_box)
 
-if result is None:
-    print("Failed to start the shell. Check the error message for details.")
-else:
-    pid, = result
+        self.spawn_terminal()
 
-# Run the GTK main loop
-Gtk.main()
+        self.window.show_all()
+
+    def spawn_terminal(self):
+        self.terminal.spawn_async(
+            Vte.PtyFlags.DEFAULT,
+            os.getenv('Home'),  # Working directory
+            [os.environ.get('SHELL')],  # Command
+            None,  # Environment
+            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            None,  # Child setup
+            None,  # Child setup data
+            -1,  # Timeout
+            None,  # Cancellable
+            self.child_ready  # Callback
+        )
+
+    def child_ready(self, terminal, pid, error, user_data):
+        if not terminal or pid == -1:
+            Gtk.main_quit()
+
+    def install_package(self, widget):
+        package_name = self.exec_entry.get_text().strip()
+        if not package_name:
+            notify2.Notification('Error', 'Please enter a package name').show()
+            return
+
+        install_command = f'pkexec apt install -y {package_name}'
+        threading.Thread(target=self.run_installation, args=(install_command, package_name)).start()
+
+    def run_installation(self, install_command, package_name):
+        result = subprocess.run(install_command, shell=True, capture_output=True, text=True)
+        GLib.idle_add(self.show_notification, result, package_name)
+
+    def show_notification(self, result, package_name):
+        if result.returncode == 0:
+            notify2.Notification(f'{package_name} installed!', '').show()
+        else:
+            notify2.Notification('Error', 'Package not found').show()
+
+if __name__ == '__main__':
+    app = PackageManager()
+    Gtk.main()
+# V0.3: Python Script with Threading

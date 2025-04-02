@@ -1,10 +1,6 @@
-﻿# LazyCat Terminal Emulator (UBUNTU application)
+﻿# LazyCat Terminal Emulator 
 
-This lightweight and fast terminal, written in C and Gtk framework, is designed to be your permanent choice.
-
-SIZE: 19KB :D
-
-after compile!
+Standalone and dependenciless Terminal Emulator for Linux distro!
 
 # screenshots
 
