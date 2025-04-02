@@ -1,35 +1,25 @@
-# Heimdallr Terminal Emulator
+﻿# LazyCat Terminal Emulator (UBUNTU application)
 
-A terminal,
-We are focused on its lightness and speed!
-Finally, it can be a permanent terminal for you!
-this terminal witten in C and Gtk framework
-because HEIMDALLR must be a SUPER lightweight.
+This lightweight and fast terminal, written in C and Gtk framework, is designed to be your permanent choice.
 
+SIZE: 19KB :D
 
-SIZE : 22K :D
-
-
-after compile !!!!!!!!!!!!!!!!!!!!!
-
+after compile!
 
 # screenshots
 
 ![screenshots](screenshots/1.png)
-
 ![screenshots](screenshots/2.png)
 
-![screenshots](screenshots/3.png)
 
-# installation 
-    $ ./preinstallRequirements.sh
-    $ ./install-heimdallr.py
+# Remember the following text for system-wide installation on UBUNTU:
+```
+make install
+```
 
-# update
-    $ heimdallr-update
 
-# exec (local)
-    $ ./preinstallRequirements.sh
-    $ make
-    $ ./heimdallr
-
+# Please remember the following steps for local execution:
+1. Build the executable by running the command:
+2. ```make lazyCat```
+5. Execute the program by typing:
+6. ```./lazyCat```

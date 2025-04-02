@@ -1,0 +1,31 @@
+[Desktop Entry]
+path=/usr/bin/
+Version=0.1
+Terminal=false
+Type=Application
+StartupNotify=true
+
+[Desktop Entry]
+Actions=Open;Tray;
+Categories=GTK;GNOME;Utility;
+Comment[en_US]=LazyCat Terminal Emulator
+Comment=LazyCat Terminal Emulator
+Exec=lazycat
+GenericName[en_US]=LazyCat Terminal Emulator
+GenericName=LazyCat Terminal Emulator
+Icon=lazycat
+Keywords=Terminal;LazyCat;lazycat;
+Name[en_US]=LazyCat Terminal Emulator
+Name=lazyCat Terminal Emulator
+StartupNotify=true
+StartupWMClass=lazycat
+Terminal=false
+Type=Application
+
+[Desktop Action Open]
+Exec=lazycat
+Name=Start LazyCat Terminal Emulator
+
+[Desktop Action Tray]
+Exec=lazycat --tray
+Name=Start in System Tray (lazycat)
