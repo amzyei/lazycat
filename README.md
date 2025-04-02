@@ -2,21 +2,18 @@
 
 Standalone and dependenciless Terminal Emulator for UBUNTU distro!
 
-# screenshots
-20XX:
-![screenshots](screenshots/1.png)
-
-2025:
+## screenshots
+- Version 0.3 :Threading (2025):
 ![screenshots](screenshots/2.png)
 
 
-# For system-wide installation on UBUNTU/Debian:
+### For system-wide installation on UBUNTU/Debian:
 ```
 make install
 ```
 
 
-# Local execution:
+### Local execution:
 ```
 make run
 ```
