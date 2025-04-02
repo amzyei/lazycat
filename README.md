@@ -1,21 +1,22 @@
 ﻿# LazyCat Terminal Emulator 
 
-Standalone and dependenciless Terminal Emulator for Linux distro!
+Standalone and dependenciless Terminal Emulator for UBUNTU distro!
 
 # screenshots
-
+20XX:
 ![screenshots](screenshots/1.png)
+
+2025:
 ![screenshots](screenshots/2.png)
 
 
-# Remember the following text for system-wide installation on UBUNTU:
+# For system-wide installation on UBUNTU/Debian:
 ```
 make install
 ```
 
 
-# Please remember the following steps for local execution:
-1. Build the executable by running the command:
-2. ```make lazyCat```
-5. Execute the program by typing:
-6. ```./lazyCat```
+# Local execution:
+```
+make run
+```
