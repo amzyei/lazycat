@@ -43,7 +43,7 @@ class PackageManager:
         self.terminal = Vte.Terminal()
         self.terminal.set_font_scale(1.3)
 
-        self.first_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.first_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.second_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         self.third_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
 
@@ -107,4 +107,4 @@ class PackageManager:
 if __name__ == '__main__':
     app = PackageManager()
     Gtk.main()
-# V0.3: Python Script with Threading
+    
