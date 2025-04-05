@@ -59,7 +59,7 @@ class PackageManager:
 
         self.second_box.pack_end(self.install_button, True, True, 4)
         self.third_box.pack_start(self.exec_label, False, False, 4)
-        self.third_box.pack_start(self.exec_entry, False, False, 4)
+        self.third_box.pack_start(self.exec_entry, True, True, 4)
 
         self.window.add(self.first_box)
 
