@@ -24,11 +24,10 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')  # Ensure you have the correct version
 from gi.repository import Gtk, Vte, GLib, Gio
 
-NOTIFY_SEND = 'notify-send '
+NOTIFY_SEND = 'notify-send'
 
-class PackageManager:
+class LazyCat:
     def __init__(self):
-        
         self.icon_path = './icon/lazycat.png' or '/opt/lazycat/icon/lazycat.png'
         if not os.path.exists(self.icon_path):
             print('Error: Icon path not found')
@@ -48,7 +47,7 @@ class PackageManager:
         self.third_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
 
         self.install_button = Gtk.Button(label='Install Package')
-        self.install_button.connect('clicked', self.install_package)
+        self.install_button.connect('clicked', self.on_install_button_clicked)
 
         self.exec_label = Gtk.Label(label='Enter package name: ')
         self.exec_entry = Gtk.Entry()
@@ -70,7 +69,7 @@ class PackageManager:
     def spawn_terminal(self):
         self.terminal.spawn_async(
             Vte.PtyFlags.DEFAULT,
-            os.getenv('Home'),  # Working directory
+            os.path.expanduser('~'),  # Working directory
             [os.environ.get('SHELL')],  # Command
             None,  # Environment
             GLib.SpawnFlags.DO_NOT_REAP_CHILD,
@@ -83,9 +82,10 @@ class PackageManager:
 
     def child_ready(self, terminal, pid, error, user_data):
         if not terminal or pid == -1:
+            print(f'Error spawning terminal: {error}')
             Gtk.main_quit()
 
-    def install_package(self, widget):
+    def on_install_button_clicked(self, widget):
         package_name = self.exec_entry.get_text().strip()
         if not package_name:
             notify2.Notification('Error', 'Please enter a package name').show()
@@ -95,16 +95,19 @@ class PackageManager:
         threading.Thread(target=self.run_installation, args=(install_command, package_name)).start()
 
     def run_installation(self, install_command, package_name):
-        result = subprocess.run(install_command, shell=True, capture_output=True, text=True)
-        GLib.idle_add(self.show_notification, result, package_name)
+        try:
+            result = subprocess.run(install_command, shell=True, capture_output=True, text=True)
+            GLib.idle_add(self.show_notification, result, package_name)
+        except Exception as e:
+            print(f'Error running installation command: {e}')
+            GLib.idle_add(self.show_notification, None, package_name)
 
     def show_notification(self, result, package_name):
-        if result.returncode == 0:
-            notify2.Notification(f'{package_name} installed!', '').show()
+        if result and result.returncode == 0:
+            notify2.Notification(f'{package_name} installed!', 'Installation successful.').show()
         else:
-            notify2.Notification('Error', 'Package not found').show()
+            notify2.Notification('Error', f'Failed to install {package_name}.').show()
 
 if __name__ == '__main__':
-    app = PackageManager()
+    app = LazyCat()
     Gtk.main()
-    
