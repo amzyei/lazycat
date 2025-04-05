@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+"""
+Short description of this Python module.
+Longer description of this module.
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <http://www.gnu.org/licenses/>.
+[AMZYEI]
+"""
+
 import gi
 import subprocess
 import os
@@ -10,12 +25,11 @@ gi.require_version('Vte', '2.91')  # Ensure you have the correct version
 from gi.repository import Gtk, Vte, GLib, Gio
 
 NOTIFY_SEND = 'notify-send '
-ICON_PATH = './icon/lazycat.png'
 
 class PackageManager:
     def __init__(self):
         
-        self.icon_path = './icon/lazycat.png'
+        self.icon_path = './icon/lazycat.png' or '/opt/lazycat/icon/lazycat.png'
         if not os.path.exists(self.icon_path):
             print('Error: Icon path not found')
             exit(1)
