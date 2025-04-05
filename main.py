@@ -21,8 +21,10 @@ import threading
 import notify2
 
 gi.require_version('Gtk', '3.0')
-gi.require_version('Vte', '2.91')  # Ensure you have the correct version
+gi.require_version('Vte', '2.91')
 from gi.repository import Gtk, Vte, GLib, Gio
+
+from lib import clockbar
 
 NOTIFY_SEND = 'notify-send'
 
@@ -41,10 +43,7 @@ class LazyCat:
 
         self.terminal = Vte.Terminal()
         self.terminal.set_font_scale(1.3)
-
-        self.first_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        self.second_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-        self.third_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        self.terminal.connect('child-exited', self.on_child_exited)
 
         self.install_button = Gtk.Button(label='Install Package')
         self.install_button.connect('clicked', self.on_install_button_clicked)
@@ -52,15 +51,19 @@ class LazyCat:
         self.exec_label = Gtk.Label(label='Enter package name: ')
         self.exec_entry = Gtk.Entry()
 
-        self.first_box.pack_start(self.terminal, True, True, 0)
-        self.first_box.pack_end(self.second_box, False, False, 0)
-        self.first_box.pack_end(self.third_box, False, False, 0)
+        self.clock = clockbar.Clock(self.window)  # Initialize the clock
 
-        self.second_box.pack_end(self.install_button, True, True, 4)
-        self.third_box.pack_start(self.exec_label, False, False, 4)
-        self.third_box.pack_start(self.exec_entry, True, True, 4)
+        self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        self.hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
 
-        self.window.add(self.first_box)
+        self.vbox.pack_start(self.terminal, True, True, 0)
+        self.vbox.pack_start(self.hbox, False, False, 0)
+
+        self.hbox.pack_start(self.exec_label, False, False, 0)
+        self.hbox.pack_start(self.exec_entry, True, True, 0)
+        self.hbox.pack_start(self.install_button, False, False, 0)
+
+        self.window.add(self.vbox)
 
         self.spawn_terminal()
 
@@ -69,21 +72,25 @@ class LazyCat:
     def spawn_terminal(self):
         self.terminal.spawn_async(
             Vte.PtyFlags.DEFAULT,
-            os.path.expanduser('~'),  # Working directory
-            [os.environ.get('SHELL')],  # Command
-            None,  # Environment
+            os.path.expanduser('~'),
+            [os.environ.get('SHELL')],
+            None,
             GLib.SpawnFlags.DO_NOT_REAP_CHILD,
-            None,  # Child setup
-            None,  # Child setup data
-            -1,  # Timeout
-            None,  # Cancellable
-            self.child_ready  # Callback
+            None,
+            None,
+            -1,
+            None,
+            self.child_ready
         )
 
     def child_ready(self, terminal, pid, error, user_data):
         if not terminal or pid == -1:
             print(f'Error spawning terminal: {error}')
             Gtk.main_quit()
+
+    def on_child_exited(self, terminal, status):
+        print(f'Terminal exited with status: {status}')
+        self.spawn_terminal()  # Optionally, respawn the terminal
 
     def on_install_button_clicked(self, widget):
         package_name = self.exec_entry.get_text().strip()
