@@ -26,11 +26,5 @@ class Clock:
 
     def update_time(self):
         current_time = time.strftime('%H:%M:%S')
-        color = self.get_random_color()
         self.window.set_title(f'lazyCat - {current_time}')
         self.timeout_id = GLib.timeout_add(1000, self.update_time)
-
-    def get_random_color(self):
-        colors = ['red', 'green', 'blue', 'orange', 'purple', 'cyan', 'magenta']
-        return random.choice(colors)
-
