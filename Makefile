@@ -40,7 +40,7 @@ install:
 	sudo cp -rf ./icon/lazycat.png /usr/share/icons/
 	
 	# Create a symbolic link to the main script in the system's bin directory
-	sudo ln -s /opt/lazycat/main.py /usr/bin/lazycat
+	sudo ln -s /opt/lazycat/main.py /bin/lazycat
 	
 	# Confirmation message
 	@echo 'LazyCat installed ...'
