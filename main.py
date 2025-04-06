@@ -94,7 +94,6 @@ class LazyCat:
         if status != 0:
             notify2.Notification('Error', 'Terminal exited with an error').show()
         else:
-            notify2.Notification('Info', 'Terminal exited successfully').show()
             Gtk.main_quit()            
 
     def on_install_button_clicked(self, widget):
