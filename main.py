@@ -28,7 +28,6 @@ from gi.repository import Gtk, Vte, GLib
 
 from lib import clockbar
 
-NOTIFY_SEND = 'notify-send'
 
 class LazyCat:
     """
@@ -39,7 +38,7 @@ class LazyCat:
         """
         Initializes the LazyCat application.
         """
-        self.icon_path = './icon/lazycat.png' or '/opt/lazycat/icon/lazycat.png'
+        self.icon_path = './icon/lazycat.png' if  os.system('./icon/lazycat.png') == 0  else '/opt/lazycat/icon/lazycat.png'
         if not os.path.exists(self.icon_path):
             notify2.Notification('Error', 'Icon path not found').show()
             sys.exit(1)
