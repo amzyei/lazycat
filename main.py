@@ -1,39 +1,31 @@
-#!/usr/bin/env python3
-"""
-Short description of this Python module.
-Longer description of this module.
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-You should have received a copy of the GNU General Public License along with
-this program. If not, see <http://www.gnu.org/licenses/>.
-[AMZYEI]
-"""
-
-import gi
-import subprocess
+import sys
 import os
+import subprocess
 import threading
 import notify2
+import gi
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Vte', '2.91')
-from gi.repository import Gtk, Vte, GLib, Gio
+from gi.repository import Gtk, Vte, GLib
 
 from lib import clockbar
 
 NOTIFY_SEND = 'notify-send'
 
 class LazyCat:
+    """
+    LazyCat is a simple GTK application that provides a terminal and a button to install packages.
+    """
+
     def __init__(self):
+        """
+        Initializes the LazyCat application.
+        """
         self.icon_path = './icon/lazycat.png' or '/opt/lazycat/icon/lazycat.png'
         if not os.path.exists(self.icon_path):
-            print('Error: Icon path not found')
-            exit(1)
+            notify2.Notification('Error', 'Icon path not found').show()
+            sys.exit(1)
 
         notify2.init('lazyCat')
 
@@ -70,29 +62,45 @@ class LazyCat:
         self.window.show_all()
 
     def spawn_terminal(self):
+        """
+        Spawns a new terminal.
+        """
         self.terminal.spawn_async(
             Vte.PtyFlags.DEFAULT,
             os.path.expanduser('~'),
-            [os.environ.get('SHELL')],
+            [os.environ.get('SHELL', '/bin/sh')],
             None,
-            GLib.SpawnFlags.DO_NOT_REAP_CHILD,
+            GLib.SpawnFlags.SEARCH_PATH,
             None,
             None,
             -1,
             None,
-            self.child_ready
+            self.child_ready,
+            None  # Pass None for user_data
         )
 
-    def child_ready(self, terminal, pid, error, user_data):
+    def child_ready(self, terminal, pid, error=None, user_data=None):
+        """
+        Handles the child process being ready.
+        """
         if not terminal or pid == -1:
-            print(f'Error spawning terminal: {error}')
+            notify2.Notification('Error', 'Failed to spawn terminal').show()
             Gtk.main_quit()
 
     def on_child_exited(self, terminal, status):
-        print(f'Terminal exited with status: {status}')
-        self.spawn_terminal()  # Optionally, respawn the terminal
+        """
+        Handles the terminal child process exiting.
+        """
+        if status != 0:
+            notify2.Notification('Error', 'Terminal exited with an error').show()
+        else:
+            notify2.Notification('Info', 'Terminal exited successfully').show()
+            Gtk.main_quit()            
 
     def on_install_button_clicked(self, widget):
+        """
+        Handles the install button click event.
+        """
         package_name = self.exec_entry.get_text().strip()
         if not package_name:
             notify2.Notification('Error', 'Please enter a package name').show()
@@ -102,19 +110,30 @@ class LazyCat:
         threading.Thread(target=self.run_installation, args=(install_command, package_name)).start()
 
     def run_installation(self, install_command, package_name):
+        """
+        Runs the package installation command.
+        """
         try:
-            result = subprocess.run(install_command, shell=True, capture_output=True, text=True)
+            result = subprocess.run(install_command, shell=True, capture_output=True, text=True, check=True)
             GLib.idle_add(self.show_notification, result, package_name)
-        except Exception as e:
-            print(f'Error running installation command: {e}')
-            GLib.idle_add(self.show_notification, None, package_name)
+        except subprocess.CalledProcessError as e:
+            GLib.idle_add(self.show_notification, e, package_name)
 
     def show_notification(self, result, package_name):
-        if result and result.returncode == 0:
-            notify2.Notification(f'{package_name} installed!', 'Installation successful.').show()
-        else:
+        """
+        Shows a notification for the installation result.
+        """
+        if isinstance(result, subprocess.CalledProcessError):
             notify2.Notification('Error', f'Failed to install {package_name}.').show()
+        else:
+            notify2.Notification(f'{package_name} installed!', 'Installation successful.').show()
 
-if __name__ == '__main__':
+def main():
+    """
+    Main function to initialize and run the LazyCat application.
+    """
     app = LazyCat()
     Gtk.main()
+
+if __name__ == '__main__':
+    main()
