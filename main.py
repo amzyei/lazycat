@@ -38,12 +38,12 @@ class LazyCat:
         """
         Initializes the LazyCat application.
         """
-        self.icon_path = './icon/lazycat.png' if  os.system('./icon/lazycat.png') == 0  else '/opt/lazycat/icon/lazycat.png'
+        self.icon_path = './icon/lazycat.png' if  os.system('ls ./icon/lazycat.png') == 0  else '/opt/lazycat/icon/lazycat.png'
         if not os.path.exists(self.icon_path):
             notify2.Notification('Error', 'Icon path not found').show()
             sys.exit(1)
 
-        notify2.init('lazyCat')
+        notify2.init('LazyCat init...')
 
         self.window = Gtk.Window(title='lazyCat')
         self.window.set_icon_from_file(self.icon_path)
