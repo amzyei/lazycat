@@ -25,6 +25,6 @@ class Clock:
         self.update_time()
 
     def update_time(self):
-        current_time = time.strftime('%H:%M:%S')
-        self.window.set_title(f'lazyCat - {current_time}')
+        current_time = time.strftime('%H:%M:%S | %d %B %Y ')
+        self.window.set_title(f'lazycat - {current_time}')
         self.timeout_id = GLib.timeout_add(1000, self.update_time)
