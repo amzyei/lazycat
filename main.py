@@ -1,24 +1,21 @@
-#!/usr/bin/python3                                                            
-                                                                              
-"""                                                                           
-                                                                              
-Short description of this python3 module.                                     
-Longer description of this module.                                            
-This program is free software: you can redistribute it and/or modify it under 
-the terms of the GNU General Public License as published by the Free Software 
-Foundation, either version 3 of the License, or (at your option) any later version.                                                                      
-This program is distributed in the hope that it will be useful, but WITHOUT   
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+#!/usr/bin/python3
+
+"""
+Short description of this Python3 module.
+Longer description of this module.
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-You should have received a copy of the GNU General Public License along with  
-this program. If not, see <http://www.gnu.org/licenses/>.                     
-[AMZYEI]                                                                      
-"""                                                                           
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <http://www.gnu.org/licenses/>.
+[AMZYEI]
+"""
 
 import sys
 import os
-import subprocess
-import threading
 import notify2
 import gi
 
@@ -31,14 +28,14 @@ from lib import clockbar
 
 class LazyCat:
     """
-    LazyCat is a simple GTK application that provides a terminal and a button to install packages.
+    LazyCat is a simple GTK application that provides a terminal.
     """
 
     def __init__(self):
         """
         Initializes the LazyCat application.
         """
-        self.icon_path = './icon/lazycat.png' if  os.system('ls ./icon/lazycat.png') == 0  else '/opt/lazycat/icon/lazycat.png'
+        self.icon_path = './icon/lazycat.png' if os.path.exists('./icon/lazycat.png') else '/opt/lazycat/icon/lazycat.png'
         if not os.path.exists(self.icon_path):
             notify2.Notification('Error', 'Icon path not found').show()
             sys.exit(1)
@@ -53,23 +50,10 @@ class LazyCat:
         self.terminal.set_font_scale(1.3)
         self.terminal.connect('child-exited', self.on_child_exited)
 
-        self.install_button = Gtk.Button(label='Install Package')
-        self.install_button.connect('clicked', self.on_install_button_clicked)
-
-        self.exec_label = Gtk.Label(label='Enter package name: ')
-        self.exec_entry = Gtk.Entry()
-
         self.clock = clockbar.Clock(self.window)  # Initialize the clock
 
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        self.hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4)
-
         self.vbox.pack_start(self.terminal, True, True, 0)
-        self.vbox.pack_start(self.hbox, False, False, 0)
-
-        self.hbox.pack_start(self.exec_label, False, False, 0)
-        self.hbox.pack_start(self.exec_entry, True, True, 0)
-        self.hbox.pack_start(self.install_button, False, False, 0)
 
         self.window.add(self.vbox)
 
@@ -110,38 +94,7 @@ class LazyCat:
         if status != 0:
             notify2.Notification('Error', 'Terminal exited with an error').show()
         else:
-            Gtk.main_quit()            
-
-    def on_install_button_clicked(self, widget):
-        """
-        Handles the install button click event.
-        """
-        package_name = self.exec_entry.get_text().strip()
-        if not package_name:
-            notify2.Notification('Error', 'Please enter a package name').show()
-            return
-
-        install_command = f'pkexec apt install -y {package_name}'
-        threading.Thread(target=self.run_installation, args=(install_command, package_name)).start()
-
-    def run_installation(self, install_command, package_name):
-        """
-        Runs the package installation command.
-        """
-        try:
-            result = subprocess.run(install_command, shell=True, capture_output=True, text=True, check=True)
-            GLib.idle_add(self.show_notification, result, package_name)
-        except subprocess.CalledProcessError as e:
-            GLib.idle_add(self.show_notification, e, package_name)
-
-    def show_notification(self, result, package_name):
-        """
-        Shows a notification for the installation result.
-        """
-        if isinstance(result, subprocess.CalledProcessError):
-            notify2.Notification('Error', f'Failed to install {package_name}.').show()
-        else:
-            notify2.Notification(f'{package_name} installed!', 'Installation successful.').show()
+            Gtk.main_quit()
 
 def main():
     """
