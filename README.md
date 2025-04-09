@@ -1,6 +1,7 @@
 ﻿# LazyCat Terminal Emulator 
 
-Standalone and dependenciless Terminal Emulator for UBUNTU distro!
+LazyCat is a stand-alone terminal for Linux that doesn’t need any extra dependencies!
+
 ## icon 
 ![icon](icon/lazycat.png)
 
@@ -9,7 +10,7 @@ Standalone and dependenciless Terminal Emulator for UBUNTU distro!
 ![screenshots](screenshots/2.png)
 
 
-### For system-wide installation on UBUNTU/Debian:
+### For system-wide installation:
 ```
 make install
 ```

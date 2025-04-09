@@ -24,11 +24,12 @@ gi.require_version('Vte', '2.91')
 from gi.repository import Gtk, Vte, GLib
 
 from lib import clockbar
+from lib import quicknote
 
 
 class LazyCat:
     """
-    LazyCat is a simple GTK application that provides a terminal.
+    LazyCat is a simple GTK application that provides a terminal and a quick note feature.
     """
 
     def __init__(self):
@@ -52,12 +53,23 @@ class LazyCat:
 
         self.clock = clockbar.Clock(self.window)  # Initialize the clock
 
+        self.quick_note_button = Gtk.Button(label='Quick Note')
+        self.quick_note_button.connect('clicked', self.on_quick_note_button_clicked)
+
+        self.header_bar = Gtk.HeaderBar()
+        self.header_bar.set_show_close_button(True)
+        self.header_bar.pack_end(self.quick_note_button)
+
+        self.window.set_titlebar(self.header_bar)
+
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         self.vbox.pack_start(self.terminal, True, True, 0)
 
         self.window.add(self.vbox)
 
         self.spawn_terminal()
+
+        self.quick_note = quicknote.QuickNote(self.window)  # Initialize the QuickNote instance with the window
 
         self.window.show_all()
 
@@ -95,6 +107,12 @@ class LazyCat:
             notify2.Notification('Error', 'Terminal exited with an error').show()
         else:
             Gtk.main_quit()
+
+    def on_quick_note_button_clicked(self, widget):
+        """
+        Handles the quick note button click event.
+        """
+        self.quick_note.show()
 
 def main():
     """
