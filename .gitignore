@@ -1,4 +1,4 @@
 .vscode/
 gi/
 */__pycache__
-alt.py
+alt*.py
