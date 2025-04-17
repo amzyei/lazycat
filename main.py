@@ -41,8 +41,6 @@ class LazyCat:
             notify2.Notification('Error', 'Icon path not found').show()
             sys.exit(1)
 
-        notify2.init('LazyCat init...')
-
         self.window = Gtk.Window(title='lazyCat')
         self.window.set_icon_from_file(self.icon_path)
         self.window.connect('destroy', Gtk.main_quit)
@@ -104,7 +102,7 @@ class LazyCat:
         Handles the terminal child process exiting.
         """
         if status != 0:
-            notify2.Notification('Error', 'Terminal exited with an error').show()
+            notify2.Notification('Error', f'Terminal exited with an error code: {status}').show()
         else:
             Gtk.main_quit()
 
