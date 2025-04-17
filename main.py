@@ -101,7 +101,10 @@ class LazyCat:
         """
         Handles the terminal child process exiting.
         """
-        if status != 0:
+        if status == 9:
+            notify2.Notification('FORCE' f'Force Quit').show()
+
+        elif status != 0:
             notify2.Notification('Error', f'Terminal exited with an error code: {status}').show()
         else:
             Gtk.main_quit()
