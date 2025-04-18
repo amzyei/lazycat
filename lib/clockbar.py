@@ -16,7 +16,6 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 
 import gi
 import time
-import random
 from gi.repository import Gtk, GLib
 
 class Clock:
