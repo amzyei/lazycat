@@ -6,7 +6,7 @@ LazyCat is a stand-alone terminal for Linux that doesn’t need any extra depend
 ![icon](icon/lazycat.png)
 
 ## screenshots
-- Version 0.3 :Threading (2025):
+- Version 1.0 (2025):
 ![screenshots](screenshots/1.png)
 
 
