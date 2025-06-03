@@ -1,35 +1,44 @@
-# Heimdallr Terminal Emulator
+﻿﻿# LazyCat Terminal Emulator
 
-A terminal,
-We are focused on its lightness and speed!
-Finally, it can be a permanent terminal for you!
-this terminal witten in C and Gtk framework
-because HEIMDALLR must be a SUPER lightweight.
+LazyCat is a small terminal program for Linux. It uses little memory and is about 15K in size.
 
+## Icon
+![icon](icon/lazycat.png)
 
-SIZE : 22K :D
-
-
-after compile !!!!!!!!!!!!!!!!!!!!!
-
-
-# screenshots
-
+## Screenshots
+- Version 1.0 (2025):
 ![screenshots](screenshots/1.png)
 
-![screenshots](screenshots/2.png)
+## How to Build and Run the C Version with Clockbar and VTE Terminal
 
-![screenshots](screenshots/3.png)
+### Build the clockbar C program:
+```
+make clockbar
+```
 
-# installation 
-    $ ./preinstallRequirements.sh
-    $ ./install-heimdallr.py
+### Install the LazyCat program on your system:
+```
+make install
+```
 
-# update
-    $ heimdallr-update
+### Run the program on your computer:
+```
+make run
+```
 
-# exec (local)
-    $ ./preinstallRequirements.sh
-    $ make
-    $ ./heimdallr
+### Install needed packages (GTK 3 and VTE development libraries):
+```
+make deps
+```
 
+This will install all packages needed to build and run the C version of LazyCat with clockbar and VTE terminal.
+
+## Testing
+
+Please check:
+- The window title changes every second with the time.
+- The terminal opens and works in the window.
+- The program runs with no errors.
+- The Makefile builds and runs the program well.
+- The program can be installed and run on your system.
+- The program can be run with the clockbar and VTE terminal.

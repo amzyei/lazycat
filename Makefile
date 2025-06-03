@@ -1,20 +1,52 @@
-#######################################################
-# preinstall requirements
-# 1. install gcc
-# 2. install gtk (clibs)
-# 3. install vte2.9 (clibs)
-#######################################################
+# Short description of this Python module.
+# Longer description of this module.
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>.
+# [AMZYEI]
 
-CC=gcc
+# Target to run the main C program
+run:
+	gcc main.c include/clockbar.c -o lazycat `pkg-config --cflags --libs gtk+-3.0 vte-2.91` && ./lazycat
 
-TERMFLAGS=-pthread -I/usr/include/vte-2.91 -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -lvte-2.91 -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
+# Target to build the clockbar C program
+clockbar:
+	gcc include/clockbar.c -o include/clockbar `pkg-config --cflags --libs gtk+-3.0`
 
-binary=bin/
+# Target to install dependencies
+deps:
+	sudo apt-get update && sudo apt-get install -y build-essential pkg-config libgtk-3-dev libvte-2.91-dev
 
-all: heimdallr heimdallr-update
-
-heimdallr: heimdallr-terminal-emu.c
-		${CC} heimdallr-terminal-emu.c ${TERMFLAGS} -o heimdallr
-
-heimdallr-update: updator.c
-		${CC} -o  heimdallr-update updator.c
+# Target to install the LazyCat application
+install:
+	# Make the main script executable
+	chmod +x main.py
+	
+	# Remove any existing LazyCat installation
+	sudo rm -rf /opt/lazycat
+	sudo rm -rf /usr/bin/lazycat
+	
+	# Create the installation directory
+	sudo mkdir -p /opt/lazycat
+	
+	# Copy the project files to the installation directory
+	sudo cp -rf . /opt/lazycat
+	
+	# Copy the desktop file to the system and user application directories
+	sudo cp -rf ./xdg/lazycat.desktop /usr/share/applications
+	cp -rf ./xdg/lazycat.desktop ~/.local/share/applications
+	
+	# Copy the icon to the system icon directories
+	sudo cp -rf ./icon/lazycat.png /usr/share/icons/hicolor/256x256/apps/
+	sudo cp -rf ./icon/lazycat.png /usr/share/icons/
+	
+	# Create a symbolic link to the main script in the system's bin directory
+	sudo ln -s /opt/lazycat/main.py /bin/lazycat
+	
+	# Confirmation message
+	@echo 'LazyCat installed ...'
