@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     gboolean success = vte_terminal_spawn_sync(vte_terminal,
                            VTE_PTY_DEFAULT,
                            NULL,               // working directory
-                           (char *[]){"/bin/bash", NULL}, // argv
+                           (char *[]){getenv("SHELL"), NULL}, // argv
                            NULL,               // environment
                            0,                  // spawn flags
                            NULL,               // child setup
