@@ -72,6 +72,9 @@ int main(int argc, char *argv[]) {
         g_clear_error(&error);
     }
 
+    // Connect child-exited signal to quit the GTK main loop when shell exits
+    g_signal_connect(vte_terminal, "child-exited", G_CALLBACK(gtk_main_quit), NULL);
+
     gtk_container_add(GTK_CONTAINER(window), terminal);
 
     // Start clockbar to update window title
