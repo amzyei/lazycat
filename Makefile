@@ -14,10 +14,6 @@
 run:
 	gcc main.c include/clockbar.c -o lazycat `pkg-config --cflags --libs gtk+-3.0 vte-2.91` && ./lazycat
 
-# Target to build the clockbar C program
-clockbar:
-	gcc include/clockbar.c -o include/clockbar `pkg-config --cflags --libs gtk+-3.0`
-
 # Target to install dependencies
 deps:
 	sudo apt-get update && sudo apt-get install -y build-essential pkg-config libgtk-3-dev libvte-2.91-dev
