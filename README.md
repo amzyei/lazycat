@@ -6,15 +6,9 @@ LazyCat is a small terminal program for Linux. It uses little memory and is abou
 ![icon](icon/lazycat.png)
 
 ## Screenshots
-- Version 1.0 (2025):
+- Version 0.1 (2025):
 ![screenshots](screenshots/1.png)
 
-## How to Build and Run the C Version with Clockbar and VTE Terminal
-
-### Build the clockbar C program:
-```
-make clockbar
-```
 
 ### Install the LazyCat program on your system:
 ```

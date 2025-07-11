@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     gboolean success = vte_terminal_spawn_sync(vte_terminal,
                            VTE_PTY_DEFAULT,
                            NULL,               // working directory
-                           (char *[]){"/bin/bash", NULL}, // argv
+                           (char *[]){getenv("SHELL"), NULL}, // argv
                            NULL,               // environment
                            0,                  // spawn flags
                            NULL,               // child setup
@@ -71,6 +71,9 @@ int main(int argc, char *argv[]) {
         g_warning("Failed to start shell: %s", error->message);
         g_clear_error(&error);
     }
+
+    // Connect child-exited signal to quit the GTK main loop when shell exits
+    g_signal_connect(vte_terminal, "child-exited", G_CALLBACK(gtk_main_quit), NULL);
 
     gtk_container_add(GTK_CONTAINER(window), terminal);
 
