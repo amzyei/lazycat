@@ -1,1 +1,26 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment directories
+venv/
+env/
+.lazycat_env/
+
+# Ignore editor and system files
+*.swp
+*.swo
+.DS_Store
+.idea/
+.vscode/
+
+# Ignore the original C binary and build files
 lazycat
+*.o
+*.so
+*.a
+*.out
+
+# Ignore Python logs and cache
+*.log
+.cache/

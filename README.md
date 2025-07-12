@@ -1,14 +1,15 @@
-﻿﻿# LazyCat Terminal Emulator
+# LazyCat Terminal Emulator - Pure Python Version
 
-LazyCat is a small terminal program for Linux. It uses little memory and is about 15K in size.
+LazyCat is a small and simple terminal program for Linux. It uses very little memory and is about 15K in size.
+
+This version is a pure Python terminal emulator using GTK 3 and VTE.
 
 ## Icon
-![icon](icon/lazycat.png)
+![icon](./icon/lazycat.png)
 
 ## Screenshots
 - Version 0.1 (2025):
-![screenshots](screenshots/1.png)
-
+![screenshots](./screenshots/1.png)
 
 ### Install the LazyCat program on your system:
 ```
@@ -36,3 +37,17 @@ Please check:
 - The Makefile builds and runs the program well.
 - The program can be installed and run on your system.
 - The program can be run with the clockbar and VTE terminal.
+
+For the Python refactored version, run:
+
+```
+python3 main.py
+```
+
+in this directory.
+
+## Open Source
+
+This project is open source and licensed under the GNU General Public License v3 or later.
+
+Contributions and improvements are welcome. Please keep the code simple and readable, suitable.
